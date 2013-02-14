@@ -65,7 +65,7 @@ namespace Pong.GameStates
             _song = content.Load<Song>("sounds/music");
             MediaPlayer.Play(_song);
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = 0.1f;
+            MediaPlayer.Volume = 0.2f;
         }
 
         public override void Update(GameTime gameTime)

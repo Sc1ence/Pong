@@ -19,6 +19,11 @@ namespace Pong
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
+        private Texture2D _scanlines;
+        private KeyboardState _newState;
+        private KeyboardState _oldState;
+        private bool _isNostalgia;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -45,6 +50,7 @@ namespace Pong
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            _scanlines = Content.Load<Texture2D>("sprites/scanline");
 
             switchState(new Menu(this));
             // TODO: use this.Content to load your game content here
@@ -66,10 +72,16 @@ namespace Pong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            _newState = Keyboard.GetState();
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
             if (_currentState != null) _currentState.Update(gameTime);
+            if (_oldState.IsKeyUp(Keys.N) && _newState.IsKeyDown(Keys.N))
+            {
+                _isNostalgia = !_isNostalgia;
+            }
+            _oldState = _newState;
             base.Update(gameTime);
         }
 
@@ -84,6 +96,7 @@ namespace Pong
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             if (_currentState != null) _currentState.Draw(spriteBatch);
+            if(_isNostalgia) spriteBatch.Draw(_scanlines, Vector2.Zero, Color.White);
             spriteBatch.End();
             base.Draw(gameTime);
         }
